@@ -1,0 +1,13 @@
+# 仮想環境フォルダ
+stock_prediction_env/
+
+# データやモデル（別途管理）
+data/
+models/
+
+# Jupyterなどの自動生成ファイル
+.ipynb_checkpoints/
+
+# OSの隠しファイル
+Thumbs.db
+.DS_Store
