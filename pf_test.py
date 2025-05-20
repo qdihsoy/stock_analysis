@@ -17,9 +17,9 @@ close_prices = data['Close'] #index:日付 columns:各銘柄の終値
 close_prices.to_csv('stock_prices.csv')
 
 #特徴量作成
-close_prices = pd.read_csv('stock_prices.csv', index_col=0, parse_dates=True)
+close_prices = pd.read_csv('stock_prices.csv', index_col=0, parse_dates=True) #日付列をdatetime型にしてインデックスへ
 
-returns = close_prices.pct_change(fill_method=None).dropna()
+returns = close_prices.pct_change(fill_method=None).dropna() #欠損値を自動で埋めない
 
 ma_5 = close_prices.rolling(window=5).mean()
 ma_25 = close_prices.rolling(window=25).mean()
@@ -48,4 +48,11 @@ df_lagged = pd.concat(lag_features, axis=1)
 df_lagged = df_lagged.ffill().bfill()
 df_lagged.to_csv('lag_features.csv')
 
-print(df_lagged.head())
+lags = pd.read_csv('lag_features.csv', index_col=0, parse_dates=True)
+features = pd.read_csv('features.csv', index_col=0, parse_dates=True)
+
+X = pd.concat([features, lags], axis=1).ffill().bfill() #特徴量を一つのデータフレームに
+y = returns['AAPL'].shift(-1) #翌日のリターンを正解データに
+
+X, y = X.align(y, join='inner', axis=0)
+
