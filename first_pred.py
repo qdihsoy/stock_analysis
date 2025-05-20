@@ -48,7 +48,7 @@ plt.legend()
 plt.grid(True)
 plt.tight_layout()
 
-df = data[['Close']].copy() #ダブル[]にすることでCloseだけを抜き出して新しデータフレームを作る/.copy:もとのdataに影響を与えないようにコピーしている
+df = data[['Close']].copy() #ダブル[]にすることでCloseだけを抜き出して新しいデータフレームを作る/.copy:もとのdataに影響を与えないようにコピーしている
 df.dropna(inplace=True) #欠損値を含む行を削除/inplace=Trueで書き換え
 
 df['MA7'] = df['Close'].rolling(window=7).mean() #rolling:移動しながらwindow:計算する期間
