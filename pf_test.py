@@ -19,7 +19,7 @@ close_prices.to_csv('stock_prices.csv')
 #特徴量作成
 close_prices = pd.read_csv('stock_prices.csv', index_col=0, parse_dates=True)
 
-returns = close_prices.pct_change().dropna()
+returns = close_prices.pct_change(fill_method=None).dropna()
 
 ma_5 = close_prices.rolling(window=5).mean()
 ma_25 = close_prices.rolling(window=25).mean()
@@ -35,3 +35,17 @@ features.columns = (
 features = features.ffill().bfill() #欠損値を直前・直後の値で補完
 
 features.to_csv('features.csv')
+
+#ラグ特徴量の追加
+lag_features = []
+
+for lag in range(1, 6):
+  lagged = returns.shift(lag)
+  lagged.columns = [f'{col}_return_lag_{lag}' for col in returns.columns]
+  lag_features.append(lagged)
+  
+df_lagged = pd.concat(lag_features, axis=1)
+df_lagged = df_lagged.ffill().bfill()
+df_lagged.to_csv('lag_features.csv')
+
+print(df_lagged.head())
